@@ -55,5 +55,5 @@ stubby -l &
 
 # Start processes
 /usr/bin/opera-vpn -bind-address 127.0.0.1:18081 -proxy socks5://127.0.0.1:9050 &
-/usr/bin/opera-vpn -bind-address 127.0.0.1:18082 -proxy socks5://127.0.0.1:4711 &
+/usr/bin/opera-vpn -bind-address 127.0.0.1:1081 -proxy socks5://127.0.0.1:4711 &
 /usr/bin/opera-vpn &

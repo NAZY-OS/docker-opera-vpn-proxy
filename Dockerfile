@@ -26,6 +26,7 @@ RUN apk update && apk add --no-cache \
     libevent \
     nano \
     htop \
+    gpm \
     stubby
 
 # Set GOPATH and add Go to PATH
@@ -57,7 +58,7 @@ RUN chown root:root /etc/dnscrypt-proxy/dnscrypt-proxy.toml && \
 WORKDIR /app
 
 # Expose ports
-EXPOSE 18080 18081 18082
+EXPOSE 18080 18081 1081
 
 # Start Tor and the proxy
 CMD ["/sbin/start.sh"]

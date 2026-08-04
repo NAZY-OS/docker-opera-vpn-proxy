@@ -2,7 +2,7 @@
 
 # Configuration
 TARGET_URL="https://api.ipify.org"  # URL that returns only the IP address
-PROXY_URL="http://127.0.0.1:18082"  # HTTP proxy URL (adjust port if needed)
+PROXY_URL="http://127.0.0.1:1081"  # HTTP proxy URL (adjust port if needed)
 
 # Get IP without proxy
 echo "Fetching IP without proxy..."
