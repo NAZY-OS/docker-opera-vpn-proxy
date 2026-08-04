@@ -3,18 +3,21 @@
 
 
 
-How to use
-  - If you want to use it as proxy: 
+## How to use
+ If you want to use it as proxy: 
 
-You can use: 127.0.0.1:18080 [Opera VPN without Tor]
 
-You can use: 127.0.0.1:18081 [Opera VPN with Tor]
+- You can use: 127.0.0.1:18080 [Opera VPN without Tor]
 
-How to build
-Just run: "     ./build_docker.sh"
+- You can use: 127.0.0.1:18081 [Opera VPN with Tor]
 
-How to start 
-Just run: "     ./start_docker.sh"
+
+
+## How to build
+  Just run: "     ./build_docker.sh"
+
+## How to start 
+  Just run: "     ./start_docker.sh"
 
 
 If you want to know that the proxy is working.
