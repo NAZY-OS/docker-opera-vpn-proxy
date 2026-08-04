@@ -11,7 +11,7 @@
 
 - You can use: 127.0.0.1:18081 [Opera VPN with Tor]
 
-- You can use: 127.0.0.1:18081 [Opera VPN with FireWhonix]
+- You can use: 127.0.0.1:1081 [Opera VPN with FireWhonix]
 
 
 ## How to build
