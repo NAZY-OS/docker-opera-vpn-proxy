@@ -25,7 +25,7 @@ mkdir -p "$tor_data_dir"
 chown tor:tor "$tor_data_dir"
 
 # Start the Tor instance with specific parameters and redirect output
-sudo -u tor tor --SocksPort "$port" --ControlPort "9150" \
+sudo -u tor tor --SocksPort "$port" --ControlPort "9151" \
     --DataDirectory "$tor_data_dir" \
     --Sandbox 1 \
     --HardwareAccel 1 \
