@@ -7,6 +7,7 @@ How to use
   - If you want to use it as proxy: 
 
 You can use: 127.0.0.1:18080 [Opera VPN without Tor]
+
 You can use: 127.0.0.1:18081 [Opera VPN with Tor]
 
 How to build
