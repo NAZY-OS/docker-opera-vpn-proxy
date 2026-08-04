@@ -40,7 +40,9 @@ sleep 1  # Ensure Tor has time to start
 while true; do
   sleep 90
   kill -USR1 $(pidof tor)
+  echo
   echo "Renewing circuit for $(pidof tor)"
+  echo
 done &
 
 # Start dnscrypt-proxy client
