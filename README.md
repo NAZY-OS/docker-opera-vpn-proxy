@@ -18,4 +18,7 @@ Just run: "     ./start_docker.sh"
 
 If you want to know that the proxy is working.
 
-You can use the test scripts!
+  - You can use the test scripts!
+
+## You can block domains with adding some entrys to the hosts file!
+Since v1.1 you will download dans host block file!
