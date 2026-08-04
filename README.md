@@ -1,4 +1,4 @@
-# docker-opera-vpn-proxy
+# docker-opera-vpn
 - A Secure docker with opera-vpn proxy
 
 
@@ -16,3 +16,6 @@ How to start
 Just run: "     ./start_docker.sh"
 
 
+If you want to know that the proxy is working.
+
+You can use the test scripts!

@@ -18,5 +18,5 @@ else
         -p $EXTERNAL_PORT_18080:$EXTERNAL_PORT_18080 \
         -p $EXTERNAL_PORT_18081:$EXTERNAL_PORT_18081 \
         --network host \
-        opera-vpn-proxy /bin/sh -c "echo 'Container started' && ls -lha && sh -c '/sbin/start.sh &';bash"
+        opera-vpn-proxy /bin/sh -c "echo 'Container started' && ls -lha && sh -c '/sbin/start.sh &' ;bash"
 fi

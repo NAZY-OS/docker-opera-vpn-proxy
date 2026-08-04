@@ -13,6 +13,7 @@ RUN apk update && apk add --no-cache \
     py3-pip \
     bash \
     curl \
+    wget \
     go \
     tor \
     openssl \
@@ -23,6 +24,8 @@ RUN apk update && apk add --no-cache \
     dnscrypt-proxy-openrc \
     libunwind \
     libevent \
+    nano \
+    htop \
     stubby
 
 # Set GOPATH and add Go to PATH
@@ -38,6 +41,8 @@ RUN apk add --no-cache git && \
     mv opera-vpn /usr/bin/opera-vpn && \
     rm -rf /tmp/opera-proxy
 
+# Copy hosts file
+COPY hosts /etc/hosts2
 
 # Copy start scripts
 COPY start.sh /sbin/start.sh

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Download latest hosts block file
+
+sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
+sudo su -c "cat /etc/hosts2 >> /etc/hosts"
+
 # Base port for Tor instances
 TOR_PORT_BASE=9050  # Adjusted to the port range of the Docker script
 
