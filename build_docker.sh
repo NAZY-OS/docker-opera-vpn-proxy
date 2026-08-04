@@ -1,1 +1,1 @@
-docker --debug build -t opera-vpn-proxy .
+docker --debug build -t firewhonix:1.2 .
