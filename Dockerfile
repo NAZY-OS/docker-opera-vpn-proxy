@@ -57,7 +57,7 @@ RUN chown root:root /etc/dnscrypt-proxy/dnscrypt-proxy.toml && \
 WORKDIR /app
 
 # Expose ports
-EXPOSE 18080 18081
+EXPOSE 18080 18081 18082
 
 # Start Tor and the proxy
 CMD ["/sbin/start.sh"]
