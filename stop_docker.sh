@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER=firewhonix:1.2
+CONTAINER=firewhonix:1.1
 
 # Stop the container
 echo "Stopping container: $CONTAINER"

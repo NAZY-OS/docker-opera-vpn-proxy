@@ -1,101 +1,95 @@
 #!/bin/bash
 
-# Base port for Tor instances (SOCKS proxies)
-TOR_PORT_BASE=9061  # Adjust to the port range used by your Docker/script setup
+# Download the latest hosts block file
+sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
+if [ -f "/etc/hosts2" ]; then
+    sudo su -c "cat /etc/hosts2 >> /etc/hosts"
+fi
 
-# Maximum number of Tor instances
-MAX_INSTANCES=12
+# Base port for Tor instances
+TOR_PORT_BASE=9150  # Adjusted to the port range of the Docker script
 
-start_tor_clients() {
-  # Use a temporary directory in RAM (e.g., tmpfs)
-  base_tmp_dir="/mnt/ramdisk"  # Ensure this path exists or is mountable
+# Use a temporary directory in RAM (e.g., tmpfs)
+base_tmp_dir="/mnt/ramdisk"  # Make sure this is created
 
-  # Mount tmpfs to keep Tor data in memory (best performance)
-  mount -t tmpfs -o size=1G tmpfs "$base_tmp_dir" 2> /dev/null
+# Create the directory if it does not exist and mount it
+mkdir -p "$base_tmp_dir" && mount -t tmpfs -o size=1G tmpfs "$base_tmp_dir" 2> /dev/null
 
-  # Track ports (optional; the original script tries to store them)
-  ports=""
+# Create a unique folder for each Tor instance
+tor_data_dir="$base_tmp_dir/tor_instance_${TOR_PORT_BASE}"
+mkdir -p "$tor_data_dir"
 
-  for i in $(seq 1 $MAX_INSTANCES); do
-    # Compute the SOCKS port for this instance
-    port=$((TOR_PORT_BASE + i - 1))
-
-    # Save SOCKS port (for later writing into /tmp/tor_ports)
-    if [ -z "$ports" ]; then
-      ports="$port"
-    else
-      ports="$ports,$port"
-    fi
-
-    # Create a unique folder for each Tor instance
-    tor_data_dir="$base_tmp_dir/tor_instance_$port"
-    mkdir -p "$tor_data_dir"
-
-    # Set ownership so the tor user can write its data directory
+# Change the ownership of the folder (check if user 'tor' exists)
+if id "tor" &>/dev/null; then
     chown tor:tor "$tor_data_dir"
+else
+    echo "User 'tor' does not exist!"
+    exit 1
+fi
 
-    # IMPORTANT:
-    # You requested "Control ports" should be 100 higher than the SOCKS port.
-    # That means: ControlPort = SocksPort + 100
-    sudo tor --User tor --SocksPort "$port" --ControlPort "$((port + 100))" \
-        --DataDirectory "$tor_data_dir" \
-        --Sandbox 1 \
-        --HardwareAccel 1 \
-        --BandwidthBurst 1547483647 \
-        --BandwidthRate 1547483647 \
-        --ExcludeExitNodes '{us},{uk},{ca},{au},{nz},{dk},{fr},{nl},{no},{de},{be},{se},{es},{it},{at},{fi},{ru}' \
-        --ClientOnly 1 \
-        --DisableNetwork 0 \
-        --UseBridges 0 \
-        --DisableDebuggerAttachment 1 \
-        --AvoidDiskWrites 1 1> /dev/null &
+# Start the Tor instance with specific parameters and redirect output
+sudo -u tor tor --SocksPort "${TOR_PORT_BASE}" --ControlPort "9151" \
+    --DataDirectory "$tor_data_dir" \
+    --Sandbox 1 \
+    --HardwareAccel 1 \
+    --BandwidthBurst 1547483647 \
+    --BandwidthRate 1547483647 \
+    --ExcludeExitNodes '{us},{uk},{ca},{au},{nz},{dk},{fr},{nl},{no},{de},{be},{se},{es},{it},{at},{fi},{ru}' \
+    --ClientOnly 1 \
+    --DisableNetwork 0 \
+    --UseBridges 0 \
+    --DisableDebuggerAttachment 1 \
+    --AvoidDiskWrites 1 1> /dev/null &
 
-    # Log started instance (visible)
-    echo "Started Tor client on SOCKS port $port with data directory $tor_data_dir (ControlPort=$((port+100)))"
+echo "Started Tor client on port ${TOR_PORT_BASE} with data directory $tor_data_dir"
+sleep 2  # Ensure Tor has time to start
+kill -USR1 $(pidof tor)
 
-    # Give Tor a moment to start
-    sleep 1
-  done
 
-  # Save the SOCKS ports in a temporary file (space-separated)
-  echo "${ports//,/ }" > /tmp/tor_ports
-}
-
-# Signal processing loop:
-# Every cycle, check running Tor process count; if >= threshold, signal them to renew circuits.
+# Signal processing loop to renew circuits periodically
 while true; do
-  # Wait before checking process count
   sleep 90
-
-  # Count number of Tor processes
-  count=$(pidof tor | wc -w)
-
-  # If at least 10 Tor instances are running, renew circuits for all of them
-  if [ "$count" -ge 10 ]; then
-    echo "There are at least 10 instances of Tor running."
-
-    for pid in $(pidof tor); do
-      # Send USR1 to trigger Tor to renew circuits (as per Tor's signal handling)
-      kill -USR1 "$pid"
-      echo "Renewing circuit for PID $pid"
-    done
-
-  else
-    # If fewer than threshold Tor instances are running, wait a bit and try again
-    sleep 30
-    continue
-  fi
-
-  # Random delay between 300 and 600 seconds to stagger renewals
-  sleep $((RANDOM % 301 + 300))
+  kill -USR1 $(pidof tor)
+  echo
+  echo "Renewing circuit for $(pidof tor)"
+  echo
 done &
 
-# Start dnscrypt-proxy client (disabled/commented in your script)
-# dnscrypt-proxy -config /etc/dnscrypt-proxy/dnscrypt-proxy.toml &
-
-# Start stubby (DNS-over-TLS proxy)
+# Start dnscrypt-proxy client
 stubby -l &
 
-# Start dispatcher and Tor clients
-/sbin/start_dispatcher.sh &
-start_tor_clients
+# Wait for Tor to be ready (45 seconds max, with GNU-style countdown)
+echo
+echo -n "Waiting for Tor to start..."
+echo
+
+for ((i=1; i<=45; i++)); do
+  if nc -z 127.0.0.1 ${TOR_PORT_BASE}; then
+    printf "\rTor is ready. Proceeding with VPN setup.\n"
+    break
+  else
+    printf "\rWaiting for Tor to start (%d/45)..." "$i"
+    sleep 1
+  fi
+done
+
+# Exit if Tor didn't start
+if ! nc -z 127.0.0.1 9250; then
+  echo "Error: Tor did not start on port ${TOR_PORT_BASE} after 45 seconds!"
+fi
+
+# Verify Tor connection
+echo -n "Verifying Tor connection..."
+if curl --socks5-hostname 127.0.0.1:${TOR_PORT_BASE} -s https://check.torproject.org/ \
+   | grep -q "Congratulations. This browser is configured to use Tor." &>/dev/null; then
+  printf "\rTor connection verified. Starting VPN...\n"
+else
+  printf "\rError: Tor is running but not routing traffic correctly!\n"
+  echo "Response from check.torproject.org:"
+  curl --socks5-hostname 127.0.0.1:${TOR_PORT_BASE} -s https://check.torproject.org/
+fi
+
+# Start VPN processes
+/usr/bin/opera-vpn -bind-address 127.0.0.1:18081 -country AS -proxy socks5://127.0.0.1:${TOR_PORT_BASE} -server-selection random &
+/usr/bin/opera-vpn -bind-address 127.0.0.1:1081 -country AS -proxy socks5://127.0.0.1:4711 -server-selection random &
+/usr/bin/opera-vpn -country AS -server-selection random &

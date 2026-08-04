@@ -12,73 +12,53 @@ RUN apk update && apk add --no-cache \
     python3 \
     py3-pip \
     bash \
-    nano \
-    git \
     curl \
-    coreutils \
     wget \
     go \
     tor \
-    sudo \
     openssl \
+    sudo \
     libcap \
     dnsmasq \
     dnscrypt-proxy \
     dnscrypt-proxy-openrc \
     libunwind \
     libevent \
+    nano \
+    htop \
+    gpm \
     stubby
-
-# Optionally, upgrade pip for Python 3 to the latest version
-#RUN python3 -m pip install --upgrade pip
-
-# Clone and build go-dispatch-proxy
-RUN git clone https://github.com/extremecoders-re/go-dispatch-proxy /tmp/go-dispatch-proxy && \
-    cd /tmp/go-dispatch-proxy && \
-    go build && \
-    chmod +x go-dispatch-proxy && \
-    mv go-dispatch-proxy /usr/bin/go-dispatch-proxy && \
-    rm -rf /tmp/go-dispatch-proxy
 
 # Set GOPATH and add Go to PATH
 ENV GOPATH=/go
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
+# Clone and build go-dispatch-proxy
+RUN apk add --no-cache git && \
+    git clone https://github.com/Alexey71/opera-proxy /tmp/opera-proxy && \
+    cd /tmp/opera-proxy && \
+    go build -o opera-vpn && \
+    chmod +x opera-vpn && \
+    mv opera-vpn /usr/bin/opera-vpn && \
+    rm -rf /tmp/opera-proxy
+
+# Copy hosts file
+COPY hosts /etc/hosts2
+
 # Copy start scripts
 COPY start.sh /sbin/start.sh
-COPY start_dispatcher.sh /sbin/start_dispatcher.sh
-
-RUN chmod +x /sbin/start.sh; chmod +x /sbin/start_dispatcher.sh
+RUN chmod +x /sbin/start.sh
 
 # Copy dnscrypt-proxy settings
 COPY dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml
-
-# Generate dnscrypt config
-#COPY generate-dnscrypt-config.sh /sbin/generate-dnscrypt-config.sh 
-#RUN chmod +x /sbin/generate-dnscrypt-config.sh
-#RUN bash /sbin/generate-dnscrypt-config.sh
-
-#RUN cp /tmp/dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml
-
-# Fix file permissions and groups
-# Set the owner to root for all files
-RUN /bin/sh -c "chown root:root /sbin/start_dispatcher.sh \
-                      /etc/dnscrypt-proxy/dnscrypt-proxy.toml \
-                      /usr/bin/go-dispatch-proxy \
-                      /sbin/start.sh"
-
-# Set permissions to 755 for all files
-RUN /bin/sh -c "chmod 755 /sbin/start_dispatcher.sh \
-                /etc/dnscrypt-proxy/dnscrypt-proxy.toml \
-                /usr/bin/go-dispatch-proxy \
-                /sbin/start.sh"
-
+RUN chown root:root /etc/dnscrypt-proxy/dnscrypt-proxy.toml && \
+    chmod 755 /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 
 # Set working directory
 WORKDIR /app
 
 # Expose ports
-EXPOSE 4711 9061-9072 9080
+EXPOSE 18080 18081 1081
 
 # Start Tor and the proxy
 CMD ["/sbin/start.sh"]

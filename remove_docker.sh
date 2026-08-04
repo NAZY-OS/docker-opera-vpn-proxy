@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER=firewhonix:1.2
+CONTAINER=opera-vpn-proxy
 
 # Remove all Docker containers
 docker rm -f ${CONTAINER}
