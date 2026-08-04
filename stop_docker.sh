@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER=firewhonix:1.1
+CONTAINER=docker-opera-vpn-proxy
 
 # Stop the container
 echo "Stopping container: $CONTAINER"
