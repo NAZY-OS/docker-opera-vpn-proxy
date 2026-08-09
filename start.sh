@@ -5,6 +5,12 @@ sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
 if [ -f "/etc/hosts2" ]; then
     sudo su -c "cat /etc/hosts2 >> /etc/hosts" && echo && echo "Custom Host Deny List" && echo && cat /etc/hosts2 
     echo
+    sleep 3
+fi
+
+sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
+if [ -f "/etc/hosts2" ]; then
+    sudo su -c "cat /etc/hosts2 >> /etc/hosts"
 fi
 
 # Base port for Tor instances
