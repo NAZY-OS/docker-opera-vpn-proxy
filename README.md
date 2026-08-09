@@ -1,7 +1,7 @@
 # docker-opera-vpn
 - A Secure docker with opera-vpn proxy
 
-
+based on: https://github.com/Alexey71/opera-proxy
 
 ## How to use
  If you want to use it as proxy: 
