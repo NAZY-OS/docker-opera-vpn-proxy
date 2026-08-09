@@ -8,11 +8,6 @@ if [ -f "/etc/hosts2" ]; then
     sleep 3
 fi
 
-sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
-if [ -f "/etc/hosts2" ]; then
-    sudo su -c "cat /etc/hosts2 >> /etc/hosts"
-fi
-
 # Base port for Tor instances
 TOR_PORT_BASE=9150  # Adjusted to the port range of the Docker script
 
