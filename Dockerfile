@@ -44,6 +44,7 @@ RUN apk add --no-cache git && \
 
 # Copy hosts file
 COPY hosts /etc/hosts2
+RUN echo && echo Show custom hosts deny list && echo && cat /etc/hosts2 && sleep 4
 
 # Copy start scripts
 COPY start.sh /sbin/start.sh
