@@ -18,7 +18,7 @@ based on: https://github.com/Alexey71/opera-proxy
   Just run: "     ./build_docker.sh"
 
 ## How to start 
-  Just run: "     ./start_docker.sh"
+  Just run: "     ./run-docker.sh"
 
 
 If you want to know that the proxy is working.
