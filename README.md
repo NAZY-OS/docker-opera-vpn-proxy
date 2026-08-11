@@ -1,4 +1,4 @@
-# docker-opera-vpn
+# docker-opera-vpn-proxy
 - A Secure docker with opera-vpn proxy
 
 based on: https://github.com/Alexey71/opera-proxy
