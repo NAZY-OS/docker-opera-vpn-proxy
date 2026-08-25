@@ -3,6 +3,7 @@
 
 based on: https://github.com/Alexey71/opera-proxy
 
+
 ## How to use
  If you want to use it as proxy: 
 
@@ -18,7 +19,7 @@ based on: https://github.com/Alexey71/opera-proxy
   Just run: "     ./build_docker.sh"
 
 ## How to start 
-  Just run: "     ./run-docker.sh"
+  Just run: "     ./start_docker.sh"
 
 
 If you want to know that the proxy is working.
@@ -27,3 +28,4 @@ If you want to know that the proxy is working.
 
 ## You can block domains with adding some entrys to the hosts file!
 Since v1.1 you will download dans host block file!
+Since v1.3 RC III you use proxychain to torify opera-proxy

@@ -3,13 +3,11 @@
 # Download the latest hosts block file
 sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
 if [ -f "/etc/hosts2" ]; then
-    sudo su -c "cat /etc/hosts2 >> /etc/hosts" && echo && echo "Custom Host Deny List" && echo && cat /etc/hosts2 
-    echo
-    sleep 3
+    sudo su -c "cat /etc/hosts2 >> /etc/hosts"
 fi
 
 # Base port for Tor instances
-TOR_PORT_BASE=9150  # Adjusted to the port range of the Docker script
+TOR_PORT_BASE=9350  # Adjusted to the port range of the Docker script
 
 # Use a temporary directory in RAM (e.g., tmpfs)
 base_tmp_dir="/mnt/ramdisk"  # Make sure this is created
@@ -30,7 +28,7 @@ else
 fi
 
 # Start the Tor instance with specific parameters and redirect output
-sudo -u tor tor --SocksPort "${TOR_PORT_BASE}" --ControlPort "9151" \
+sudo -u tor tor --SocksPort "${TOR_PORT_BASE}" --ControlPort "$((TOR_PORT_BASE + 100))" \
     --DataDirectory "$tor_data_dir" \
     --Sandbox 1 \
     --HardwareAccel 1 \
@@ -75,23 +73,8 @@ for ((i=1; i<=45; i++)); do
   fi
 done
 
-# Exit if Tor didn't start
-if ! nc -z 127.0.0.1 9250; then
-  echo "Error: Tor did not start on port ${TOR_PORT_BASE} after 45 seconds!"
-fi
-
-# Verify Tor connection
-echo -n "Verifying Tor connection..."
-if curl --socks5-hostname 127.0.0.1:${TOR_PORT_BASE} -s https://check.torproject.org/ \
-   | grep -q "Congratulations. This browser is configured to use Tor." &>/dev/null; then
-  printf "\rTor connection verified. Starting VPN...\n"
-else
-  printf "\rError: Tor is running but not routing traffic correctly!\n"
-  echo "Response from check.torproject.org:"
-  curl --socks5-hostname 127.0.0.1:${TOR_PORT_BASE} -s https://check.torproject.org/
-fi
 
 # Start VPN processes
-/usr/bin/opera-vpn -bind-address 127.0.0.1:18081 -country AS -proxy socks5://127.0.0.1:${TOR_PORT_BASE} -server-selection random &
-/usr/bin/opera-vpn -bind-address 127.0.0.1:1081 -country AS -proxy socks5://127.0.0.1:4711 -server-selection random &
-/usr/bin/opera-vpn -country AS -server-selection random &
+proxychains -f socks5://127.0.0.1:${TOR_PORT_BASE} /usr/bin/opera-vpn -bind-address 127.0.0.1:18081 -country AS -server-selection random -api-proxy-parallel 15 &
+proxychains -f socks5://127.0.0.1:4711 /usr/bin/opera-vpn -bind-address 127.0.0.1:1081 -country AS -server-selection random -api-proxy-parallel 15 &
+/usr/bin/opera-vpn -country AS -server-selection random -api-proxy-parallel 15 &

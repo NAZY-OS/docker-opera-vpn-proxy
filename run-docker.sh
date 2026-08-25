@@ -3,6 +3,8 @@
 # Prompt: Enable debug mode?
 read -p "Start container in debug mode? (y/n) [Enter = n]: " response
 
+#docker network create mynet 2>/dev/null || true
+
 # Default: Debug mode disabled (if Enter is pressed)
 response=${response:-n}
 
