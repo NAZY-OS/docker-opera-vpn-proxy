@@ -55,6 +55,11 @@ COPY dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 RUN chown root:root /etc/dnscrypt-proxy/dnscrypt-proxy.toml && \
     chmod 755 /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 
+# Copy proxychain settings
+
+COPY proxychains-tor.config /etc/proxychains-tor.config
+COPY proxychains-firewhonix.config /etc/proxychains-firewhonix.config
+
 # Set working directory
 WORKDIR /app
 
