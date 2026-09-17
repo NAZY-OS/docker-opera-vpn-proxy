@@ -14,6 +14,24 @@ based on: https://github.com/Alexey71/opera-proxy
 
 - You can use: 127.0.0.1:1081 [Opera VPN with FireWhonix]
 
+# Using EUROPE or AMERICA 
+
+## EUROPE 
+
+- You can use: 127.0.0.1:18082 [Opera VPN without Tor]
+
+- You can use: 127.0.0.1:18082 [Opera VPN with Tor]
+
+- You can use: 127.0.0.1:1082 [Opera VPN with FireWhonix]
+
+## AMERICA
+
+- You can use: 127.0.0.1:18083 [Opera VPN without Tor]
+
+- You can use: 127.0.0.1:18083 [Opera VPN with Tor]
+
+- You can use: 127.0.0.1:1083 [Opera VPN with FireWhonix]
+
 
 ## How to build
   Just run: "     ./build_docker.sh"

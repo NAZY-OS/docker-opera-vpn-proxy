@@ -11,10 +11,10 @@
 127.0.0.1 speeddials.opera.com
 127.0.0.1 operacdn.com
 127.0.0.1 login.microsoftonline.com
-127.0.0.1 gstatic.com
-127.0.0.1 play.google.com
-127.0.0.1 update.googleapis.com
-#127.0.0.1 firefox.settings.services.mozilla.com
-#127.0.0.1 detectportal.firefox.com
-#127.0.0.1 push.services.mozilla.com
+#127.0.0.1 gstatic.com
+#127.0.0.1 play.google.com
+#127.0.0.1 update.googleapis.com
+127.0.0.1 firefox.settings.services.mozilla.com
+127.0.0.1 detectportal.firefox.com
+127.0.0.1 push.services.mozilla.com
 
