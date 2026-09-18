@@ -92,7 +92,7 @@ proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-addre
 # EUROPE
 proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:18082 -socks-mode -country EU -server-selection random -api-proxy-parallel 15 &
 proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:1082 -socks-mode -country EU -server-selection random -api-proxy-parallel 15 &
-/usr/bin/opera-vpn -socks-mode -country EU -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:18082 &
+/usr/bin/opera-vpn -socks-mode -country EU -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:1802 &
 
 # AMERICA
 proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:18083 -socks-mode -country AM -server-selection random -api-proxy-parallel 15 &

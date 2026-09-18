@@ -8,7 +8,7 @@ based on: https://github.com/Alexey71/opera-proxy
  If you want to use it as proxy: 
 
 
-- You can use: 127.0.0.1:18080 [Opera VPN without Tor]
+- You can use: 127.0.0.1:18080 [Opera VPN Direct Mode]
 
 - You can use: 127.0.0.1:18081 [Opera VPN with Tor]
 
@@ -18,7 +18,7 @@ based on: https://github.com/Alexey71/opera-proxy
 
 ## EUROPE 
 
-- You can use: 127.0.0.1:18082 [Opera VPN without Tor]
+- You can use: 127.0.0.1:18082 [Opera VPN Direct Mode]
 
 - You can use: 127.0.0.1:18082 [Opera VPN with Tor]
 
@@ -26,7 +26,7 @@ based on: https://github.com/Alexey71/opera-proxy
 
 ## AMERICA
 
-- You can use: 127.0.0.1:18083 [Opera VPN without Tor]
+- You can use: 127.0.0.1:18083 [Opera VPN Direct Mode]
 
 - You can use: 127.0.0.1:18083 [Opera VPN with Tor]
 
