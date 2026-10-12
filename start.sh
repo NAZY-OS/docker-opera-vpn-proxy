@@ -36,17 +36,29 @@ fi
 
 # Start the Tor instance with specific parameters and redirect output
 sudo -u tor tor --SocksPort "${TOR_PORT_BASE}" --ControlPort "$((TOR_PORT_BASE + 100))" \
-    --DataDirectory "$tor_data_dir" \
-    --Sandbox 1 \
-    --HardwareAccel 1 \
-    --BandwidthBurst 1547483647 \
-    --BandwidthRate 1547483647 \
-    --ExcludeExitNodes '{us},{uk},{ca},{au},{nz},{dk},{fr},{nl},{no},{de},{be},{se},{es},{it},{at},{fi},{ru}' \
-    --ClientOnly 1 \
-    --DisableNetwork 0 \
-    --UseBridges 0 \
-    --DisableDebuggerAttachment 1 \
-    --AvoidDiskWrites 1 1> /dev/null &
+        --DataDirectory "$tor_data_dir" \
+        --Sandbox 1 \
+        --HardwareAccel 1 \
+        --BandwidthRate 400000 \
+        --BandwidthBurst 400000 \
+        --ExcludeExitNodes {us},{uk},{ca},{au},{nz},{dk},{fr},{nl},{no},{de},{be},{it},{es},{se},{sg},{il},{kr},{ru},{by},{am},{cn},{ir},{kp},{kz},{kg},{tj},{sy} \
+        --ClientOnly 1 \
+        --DisableNetwork 0 \
+        --UseBridges 0 \
+        --StrictNodes 1 \
+        --IsolateDestAddr 1 \
+        --MaxClientCircuitsPending 200 \
+        --EnforceDistinctSubnets 0 \
+        --CircuitStreamTimeout 300 \
+        --KeepalivePeriod 60 \
+        --CircuitBuildTimeout 30 \
+        --LearnCircuitBuildTimeout 0 \
+        --MaxCircuitDirtiness 600 \
+        --CircuitStreamTimeout 600 \
+        --UseEntryGuards 1 \
+        --NumEntryGuards 6 \
+        --DisableDebuggerAttachment 1 \
+        --AvoidDiskWrites 1 1> /dev/null &
 
 echo "Started Tor client on port ${TOR_PORT_BASE} with data directory $tor_data_dir"
 sleep 2  # Ensure Tor has time to start
