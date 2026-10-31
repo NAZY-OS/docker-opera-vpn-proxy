@@ -27,7 +27,7 @@ RUN apk update && apk add --no-cache \
     libevent \
     nano \
     htop \
-    gpm \
+    nftables \
     stubby
 
 # Set GOPATH and add Go to PATH
@@ -49,6 +49,10 @@ COPY hosts /etc/hosts2
 # Copy start scripts
 COPY start.sh /sbin/start.sh
 RUN chmod +x /sbin/start.sh
+
+# Copy port_filter.sh
+COPY port_filter.sh /usr/local/bin/port_filter.sh
+RUN chmod +x /usr/local/bin/port_filter.sh
 
 # Copy dnscrypt-proxy settings
 COPY dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml

@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/bin/bash
 
 # Download the latest hosts block file
 sudo wget -O /etc/hosts https://someonewhocares.org/hosts/hosts
@@ -46,7 +46,6 @@ sudo -u tor tor --SocksPort "${TOR_PORT_BASE}" --ControlPort "$((TOR_PORT_BASE +
         --DisableNetwork 0 \
         --UseBridges 0 \
         --StrictNodes 1 \
-        --IsolateDestAddr 1 \
         --MaxClientCircuitsPending 200 \
         --EnforceDistinctSubnets 0 \
         --CircuitStreamTimeout 300 \
@@ -95,18 +94,60 @@ for ((i=1; i<=45; i++)); do
 done
 
 
+## VPN Process Configuration
+# Define ports for different regions and modes
+declare -A PORTS=(
+  # ASIA
+  ["ASIA_TOR"]=18081
+  ["ASIA_FIREWHONIX"]=1081
+  ["ASIA_DIRECT"]=18082
+
+  # EUROPE
+  ["EUROPE_TOR"]=18181
+  ["EUROPE_FIREWHONIX"]=1181
+  ["EUROPE_DIRECT"]=18182
+
+  # AMERICA
+  ["AMERICA_TOR"]=18281
+  ["AMERICA_FIREWHONIX"]=1281
+  ["AMERICA_DIRECT"]=18282
+)
+
 ## Start VPN processes
+echo "Starting VPN processes..."
+echo "----------------------------------------"
+echo "Region    | Mode       | Port  | Command"
+echo "----------------------------------------"
+
 # ASIA
-proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:18081 -socks-mode -country ${OPERA_PROXY_COUNTRY} -server-selection random -api-proxy-parallel 15 &
-proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:1081 -socks-mode -country ${OPERA_PROXY_COUNTRY} -server-selection random -api-proxy-parallel 15 &
-/usr/bin/opera-vpn -socks-mode -country ${OPERA_PROXY_COUNTRY} -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:1801 &
+echo "ASIA      | TOR        | ${PORTS["ASIA_TOR"]}   | proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["ASIA_TOR"]} -socks-mode -country ${OPERA_PROXY_COUNTRY}"
+proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["ASIA_TOR"]} -socks-mode -country ${OPERA_PROXY_COUNTRY} &
+
+echo "ASIA      | FIREWHONIX | ${PORTS["ASIA_FIREWHONIX"]}   | proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["ASIA_FIREWHONIX"]} -socks-mode -country ${OPERA_PROXY_COUNTRY}"
+proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["ASIA_FIREWHONIX"]} -socks-mode -country ${OPERA_PROXY_COUNTRY} &
+
+echo "ASIA      | DIRECT     | ${PORTS["ASIA_DIRECT"]}   | /usr/bin/opera-vpn -socks-mode -country ${OPERA_PROXY_COUNTRY} -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:${PORTS["ASIA_DIRECT"]}"
+/usr/bin/opera-vpn -socks-mode -country ${OPERA_PROXY_COUNTRY} -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:${PORTS["ASIA_DIRECT"]} &
 
 # EUROPE
-proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:18181 -socks-mode -country EU -server-selection random -api-proxy-parallel 15 &
-proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:1181 -socks-mode -country EU -server-selection random -api-proxy-parallel 15 &
-/usr/bin/opera-vpn -socks-mode -country EU -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:1811 &
+echo "EUROPE    | TOR        | ${PORTS["EUROPE_TOR"]}   | proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["EUROPE_TOR"]} -socks-mode -country EU -server-selection random"
+proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["EUROPE_TOR"]} -socks-mode -country EU -server-selection random &
+
+echo "EUROPE    | FIREWHONIX | ${PORTS["EUROPE_FIREWHONIX"]}   | proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["EUROPE_FIREWHONIX"]} -socks-mode -country EU -server-selection random"
+proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["EUROPE_FIREWHONIX"]} -socks-mode -country EU -server-selection random &
+
+echo "EUROPE    | DIRECT     | ${PORTS["EUROPE_DIRECT"]}   | /usr/bin/opera-vpn -socks-mode -country EU -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:${PORTS["EUROPE_DIRECT"]}"
+/usr/bin/opera-vpn -socks-mode -country EU -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:${PORTS["EUROPE_DIRECT"]} &
 
 # AMERICA
-proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:18281 -socks-mode -country AM -server-selection random -api-proxy-parallel 15 &
-proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:1281 -socks-mode -country AM -server-selection random -api-proxy-parallel 15 &
-/usr/bin/opera-vpn -socks-mode -country AM -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:18281 &
+echo "AMERICA   | TOR        | ${PORTS["AMERICA_TOR"]}   | proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["AMERICA_TOR"]} -socks-mode -country AM -server-selection random"
+proxychains -f /etc/proxychains-tor.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["AMERICA_TOR"]} -socks-mode -country AM -server-selection random &
+
+echo "AMERICA   | FIREWHONIX | ${PORTS["AMERICA_FIREWHONIX"]}   | proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["AMERICA_FIREWHONIX"]} -socks-mode -country AM -server-selection random"
+proxychains -f /etc/proxychains-firewhonix.config /usr/bin/opera-vpn -bind-address 127.0.0.1:${PORTS["AMERICA_FIREWHONIX"]} -socks-mode -country AM -server-selection random &
+
+echo "AMERICA   | DIRECT     | ${PORTS["AMERICA_DIRECT"]}   | /usr/bin/opera-vpn -socks-mode -country AM -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:${PORTS["AMERICA_DIRECT"]}"
+/usr/bin/opera-vpn -socks-mode -country AM -server-selection random -api-proxy-parallel 15 -bind-address 127.0.0.1:${PORTS["AMERICA_DIRECT"]} &
+
+echo "----------------------------------------"
+echo "All VPN processes started successfully"
